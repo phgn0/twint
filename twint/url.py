@@ -89,7 +89,7 @@ async def Search(config, init):
         ('send_error_codes', 'true'),
         ('simple_quoted_tweet', 'true'),
         ('count', tweet_count),
-        # ('query_source', 'typed_query'),
+        ('query_source', 'typed_query'),
         # ('pc', '1'),
         ('cursor', str(init)),
         ('spelling_corrections', '1'),
@@ -99,8 +99,7 @@ async def Search(config, init):
     if not config.Popular_tweets:
         params.append(('f', 'tweets'))
     if config.Lang:
-        params.append(("l", config.Lang))
-        params.append(("lang", "en"))
+        q += f" lang:{config.Lang}"
     if config.Query:
         q += f" from:{config.Query}"
     if config.Username:
@@ -169,7 +168,7 @@ async def Search(config, init):
 def SearchProfile(config, init=None):
     logme.debug(__name__ + ':SearchProfile')
     _url = 'https://api.twitter.com/2/timeline/profile/{user_id}.json'.format(user_id=config.User_id)
-    tweet_count = 100
+    tweet_count = config.Limit if config.Limit else 100
     params = [
         # some of the fields are not required, need to test which ones aren't required
         ('include_profile_interstitial_type', '1'),
